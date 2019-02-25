@@ -7,7 +7,15 @@ import { publicPath, buildPath } from './paths';
 
 const config: webpack.Configuration = {
   mode: 'development',
-  entry: './src/index.ts',
+  entry: {
+    main: './src/index.ts',
+    three: 'three'
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   module: {
     rules: [
       {

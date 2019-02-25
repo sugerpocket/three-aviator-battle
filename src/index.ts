@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { WebGLRenderer } from 'three';
 import { camera, scene } from './envirenment/scene';
 import sea from './objects/sea';
 // import sky from './objects/sky';
@@ -24,7 +24,7 @@ enemy.onDestroy(() => {
 scene.add(enemy);
 
 // 创建渲染器
-const renderer = new THREE.WebGLRenderer({ 
+const renderer = new WebGLRenderer({ 
   // 在 css 中设置背景色透明显示渐变色
   alpha: true, 
   // 开启抗锯齿，但这样会降低性能。

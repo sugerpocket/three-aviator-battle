@@ -1,8 +1,8 @@
-import * as THREE from 'three';
+import { Object3D } from 'three';
 import Cloud from './cloud';
 import { loop } from '../loop';
 
-class Sky extends THREE.Object3D {
+class Sky extends Object3D {
   // 选取若干朵云散布在天空中
   private numberClouds = 10;
 

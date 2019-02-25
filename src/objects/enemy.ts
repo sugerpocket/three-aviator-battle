@@ -1,14 +1,14 @@
-import * as THREE from 'three';
+import { Mesh, TetrahedronGeometry, MeshPhongMaterial, Vector3, Object3D } from 'three';
 import Colors from '../colors';
 import { loop, cancelLoop } from '../loop';
 import airplane from './airplane';
 import { TweenMax, Power2 } from 'gsap';
 
-class EnemyParticle extends THREE.Mesh {
-  constructor(position: THREE.Vector3, color: number, scale: number) {
+class EnemyParticle extends Mesh {
+  constructor(position: Vector3, color: number, scale: number) {
     super(
-      new THREE.TetrahedronGeometry(3, 0),
-      new THREE.MeshPhongMaterial({
+      new TetrahedronGeometry(3, 0),
+      new MeshPhongMaterial({
         color,
         shininess: 0,
         specular: 0xffffff,
@@ -19,7 +19,7 @@ class EnemyParticle extends THREE.Mesh {
   }
 
   public explode() {
-    let material = this.material as THREE.MeshPhongMaterial;
+    let material = this.material as MeshPhongMaterial;
     material.needsUpdate = true;
     const targetX = this.position.x + (-1 + Math.random() * 2) * 50;
     const targetZ = this.position.z + (-1 + Math.random() * 2) * 50;
@@ -36,7 +36,7 @@ class EnemyParticle extends THREE.Mesh {
 
 type DestroyCallback = () => void;
 
-export default class Enemy extends THREE.Mesh {
+export default class Enemy extends Mesh {
   private destroyCallbacks: DestroyCallback[] = [];
 
   private loopFlag: number | null = null;
@@ -45,8 +45,8 @@ export default class Enemy extends THREE.Mesh {
 
   constructor() {
     super(
-      new THREE.TetrahedronGeometry(8, 2),
-      new THREE.MeshPhongMaterial({
+      new TetrahedronGeometry(8, 2),
+      new MeshPhongMaterial({
         color: Colors.Red,
         shininess: 0,
         specular: 0xffffff,
@@ -77,7 +77,7 @@ export default class Enemy extends THREE.Mesh {
     this.visible = false;
     for (let i = 0; i < n; i++){
       const particle = new EnemyParticle(this.position, Colors.Red, this.size);
-      (this.parent as THREE.Object3D).add(particle);
+      (this.parent as Object3D).add(particle);
       particle.visible = true;
       particle.position.y = this.position.y;
       particle.position.x = this.position.x;

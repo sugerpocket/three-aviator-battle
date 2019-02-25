@@ -1,15 +1,15 @@
-import * as THREE from 'three';
+import { Object3D, MeshPhongMaterial, BoxGeometry, Mesh } from 'three';
 import Colors from '../colors';
 
-export default class Cloud extends THREE.Object3D {
+export default class Cloud extends Object3D {
   // 创建材质；一个简单的白色材质就可以达到效果
-  private material = new THREE.MeshPhongMaterial({
+  private material = new MeshPhongMaterial({
     color: Colors.White,  
   });
 
   // 创建一个正方体
   // 这个形状会被复制创建云
-  private geometry = new THREE.BoxGeometry(20, 20, 20);
+  private geometry = new BoxGeometry(20, 20, 20);
 
   constructor() {
     super();
@@ -20,7 +20,7 @@ export default class Cloud extends THREE.Object3D {
     for (var i = 0; i < n; i++){
     
       // 通过复制几何体创建网格
-      const mesh = new THREE.Mesh(this.geometry, this.material); 
+      const mesh = new Mesh(this.geometry, this.material); 
       
       // 随机设置每个正方体的位置和旋转角度
       if (i % 2 === 0) {

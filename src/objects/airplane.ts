@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry } from 'three';
 import Colors from '../colors';
 import { loop } from '../loop';
 
@@ -9,54 +9,54 @@ enum DirectionKeys {
   RIGHT = 'KeyD',
 }
 
-class AirPlane extends THREE.Object3D {
+class AirPlane extends Object3D {
 
   // 创建机舱
-  private cockpit = new THREE.Mesh(
-    new THREE.BoxGeometry(60, 50, 50, 1, 1, 1),
-    new THREE.MeshPhongMaterial({
+  private cockpit = new Mesh(
+    new BoxGeometry(60, 50, 50, 1, 1, 1),
+    new MeshPhongMaterial({
       color: Colors.Red,
       flatShading: true,
     }),
   );
   
   // 创建引擎
-  private engine = new THREE.Mesh(
-    new THREE.BoxGeometry(20, 50, 50, 1, 1, 1),
-    new THREE.MeshPhongMaterial({
+  private engine = new Mesh(
+    new BoxGeometry(20, 50, 50, 1, 1, 1),
+    new MeshPhongMaterial({
       color: Colors.White,
       flatShading: true,
     }),
   );
 
   // 创建机尾
-  private tail = new THREE.Mesh(
-    new THREE.BoxGeometry(15, 20, 5, 1, 1, 1),
-    new THREE.MeshPhongMaterial({
+  private tail = new Mesh(
+    new BoxGeometry(15, 20, 5, 1, 1, 1),
+    new MeshPhongMaterial({
       color: Colors.Red,
       flatShading: true,
     }),
   );
 
-  private wing = new THREE.Mesh(
-    new THREE.BoxGeometry(40, 8, 150, 1, 1, 1),
-    new THREE.MeshPhongMaterial({
+  private wing = new Mesh(
+    new BoxGeometry(40, 8, 150, 1, 1, 1),
+    new MeshPhongMaterial({
       color: Colors.Red,
       flatShading: true,
     }),
   );
 
-  private propeller = new THREE.Mesh(
-    new THREE.BoxGeometry(20, 10, 10, 1, 1, 1),
-    new THREE.MeshPhongMaterial({
+  private propeller = new Mesh(
+    new BoxGeometry(20, 10, 10, 1, 1, 1),
+    new MeshPhongMaterial({
       color: Colors.Brown,
       flatShading: true,
     }),
   );
 
-  private blade = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 100, 20, 1, 1, 1),
-    new THREE.MeshPhongMaterial({
+  private blade = new Mesh(
+    new BoxGeometry(1, 100, 20, 1, 1, 1),
+    new MeshPhongMaterial({
       color: Colors.BrownDark,
       flatShading: true,
     }),

@@ -1,8 +1,7 @@
-import * as THREE from 'three';
-import Colors from '../colors';
+import { PerspectiveCamera, Scene } from 'three';
 import { hemisphereLight, shadowLight, ambientLight } from './light';
 
-const scene = new THREE.Scene();
+const scene = new Scene();
 
 // 在场景中添加雾的效果；样式上使用和背景一样的颜色
 // scene.fog = new THREE.Fog(Colors.LightYellow, 100, 950);
@@ -20,7 +19,7 @@ const farPlane = 10000;
  * @param nearPlane 近平面
  * @param farPlane 远平面
  */
-const camera = new THREE.PerspectiveCamera(
+const camera = new PerspectiveCamera(
   fieldOfView,
   aspectRatio,
   nearPlane,

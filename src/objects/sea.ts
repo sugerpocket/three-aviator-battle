@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { CylinderGeometry, Matrix4, MeshPhongMaterial, Mesh } from 'three';
 import Colors from '../colors';
 import { loop } from '../loop';
 
@@ -16,15 +16,15 @@ interface Wave {
 
 // 创建一个圆柱几何体
 // 参数为：顶面半径，底面半径，高度，半径分段，高度分段
-const geometry = new THREE.CylinderGeometry(1400, 1400, 1200, 100, 10);
+const geometry = new CylinderGeometry(1400, 1400, 1200, 100, 10);
 
 // 在 x 轴旋转几何体
-geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+geometry.applyMatrix(new Matrix4().makeRotationX(-Math.PI / 2));
 // 重点：通过合并顶点，我们确保海浪的连续性
 geometry.mergeVertices();
 
 // 创建材质
-const material = new THREE.MeshPhongMaterial({
+const material = new MeshPhongMaterial({
   color: Colors.Blue,
   transparent: true,
   opacity: .6,
@@ -55,8 +55,8 @@ for (let i = 0; i < length; i++){
   });
 };
 
-// 为了在 Three.js 创建一个物体，我们必须创建网格用来组合几何体和一些材质
-const sea = new THREE.Mesh(geometry, material);
+// 为了在 js 创建一个物体，我们必须创建网格用来组合几何体和一些材质
+const sea = new Mesh(geometry, material);
 
 // 允许大海对象接收阴影
 sea.receiveShadow = true;
@@ -86,7 +86,7 @@ loop(time => {
 
   // 告诉渲染器代表大海的几何体发生改变
   // 事实上，为了维持最好的性能
-  // Three.js 会缓存几何体和忽略一些修改
+  // js 会缓存几何体和忽略一些修改
   // 除非加上这句
   geometry.verticesNeedUpdate = true;
 

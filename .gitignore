@@ -84,3 +84,6 @@ typings/
 
 # lock
 .yarn.lock
+
+# build 
+dist

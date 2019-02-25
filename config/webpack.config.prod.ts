@@ -3,16 +3,25 @@ import * as webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { publicPath, buildPath } from './paths';
 
 const extractLess = new ExtractTextWebpackPlugin({
-  filename: "[name].[contenthash].css"
+  filename: "[name].[hash].css"
 });
 
 const config: webpack.Configuration = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: {
+    main: './src/index.ts',
+    three: 'three'
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   module: {
     rules: [
       {
@@ -42,7 +51,9 @@ const config: webpack.Configuration = {
     new CleanWebpackPlugin([buildPath]),
     new HtmlWebpackPlugin({
       template: path.join(publicPath, 'index.html')
-    })
+    }),
+    // new BundleAnalyzerPlugin(),
+    extractLess
   ]
 };
 

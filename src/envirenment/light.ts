@@ -1,16 +1,16 @@
-import * as THREE from 'three';
+import { HemisphereLight, DirectionalLight, AmbientLight } from 'three';
 
 // 半球光就是渐变的光；
 // 第一个参数是天空的颜色，第二个参数是地上的颜色，第三个参数是光源的强度
-const hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
+const hemisphereLight = new HemisphereLight(0xaaaaaa, 0x000000, .9);
 
 // 方向光是从一个特定的方向的照射
 // 类似太阳，即所有光源是平行的
 // 第一个参数是关系颜色，第二个参数是光源强度
-const shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+const shadowLight = new DirectionalLight(0xffffff, .9);
 
 // 环境光源修改场景中的全局颜色和使阴影更加柔和
-const ambientLight = new THREE.AmbientLight(0xdc8874, .5);
+const ambientLight = new AmbientLight(0xdc8874, .5);
 
 // 设置光源的方向。  
 // 位置不同，方向光作用于物体的面也不同，看到的颜色也不同
