@@ -1,0 +1,11 @@
+enum Colors {
+  Red = 0xf25346,    
+  White = 0xd8d0d1,  
+  Brown = 0x59332e,  
+  Pink = 0xF5986E,   
+  BrownDark = 0x23190f,  
+  Blue = 0x68c3c0,
+  LightYellow = 0xf7d9aa,
+}
+
+export default Colors;
