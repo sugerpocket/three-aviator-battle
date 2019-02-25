@@ -1,6 +1,8 @@
-import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry } from 'three';
+import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry, Vector3 } from 'three';
 import Colors from '../colors';
 import { loop } from '../loop';
+import { camera } from '../envirenment/scene';
+import game from '../game';
 
 enum DirectionKeys {
   UP = 'KeyW',
@@ -146,10 +148,15 @@ class AirPlane extends Object3D {
       zshift -= this.speed;
       xrotation -= this.maxRoatation;
     }
+    
+    // 判断是否在视野范围内
+    const temp = this.position.clone();
+    temp.z += zshift;
+    temp.x += xshift;
 
     // 移动
-    this.position.z += zshift;
-    this.position.x += xshift;
+    if (Math.abs(temp.z) < game.zMax) this.position.z += zshift;
+    if (Math.abs(temp.x) < game.xMax) this.position.x += xshift;
 
     // 旋转直到到达指定角度
     if (this.rotation.x > xrotation) {

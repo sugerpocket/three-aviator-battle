@@ -9,8 +9,8 @@ const scene = new Scene();
 
 const aspectRatio = window.innerWidth / window.innerHeight;   
 const fieldOfView = 60;   
-const nearPlane = 1;  
-const farPlane = 10000;
+const nearPlane = 100;  
+const farPlane = 1000;
 
 /**
  * PerspectiveCamera 透视相机
@@ -34,7 +34,7 @@ camera.position.y = 600;
 // 让相机从上方往下看
 camera.lookAt(0, 0, 0);
 // 调整相机角度
-camera.rotation.z -= 1.57;
+camera.rotation.z -= Math.PI / 2;
 
 scene.add(hemisphereLight, shadowLight, ambientLight);
 
