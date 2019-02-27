@@ -21,8 +21,8 @@ class EnemyParticle extends Mesh {
   public explode() {
     let material = this.material as MeshPhongMaterial;
     material.needsUpdate = true;
-    const targetX = this.position.x + (-1 + Math.random() * 2) * 50;
-    const targetZ = this.position.z + (-1 + Math.random() * 2) * 50;
+    const targetX = this.position.x + (-1 + Math.random() * 2) * 20;
+    const targetZ = this.position.z + (-1 + Math.random() * 2) * 20;
     const speed = .6 + Math.random() * .2;
     TweenMax.to(this.rotation, speed, { x: Math.random() * 12, z: Math.random() * 12 });
     TweenMax.to(this.scale, speed, { x: .1, y: .1, z: .1 });
@@ -72,11 +72,12 @@ export default class Enemy extends Mesh {
     }
   }
 
+  // 爆炸特效
   private explode() {
     const n = 15;
     this.visible = false;
     for (let i = 0; i < n; i++){
-      const particle = new EnemyParticle(this.position, Colors.Red, this.size);
+      const particle = new EnemyParticle(this.position, Colors.Red, this.size * 2);
       (this.parent as Object3D).add(particle);
       particle.visible = true;
       particle.position.y = this.position.y;
@@ -88,6 +89,7 @@ export default class Enemy extends Mesh {
   private destroy() {
     this.explode();
     this.destroyCallbacks.forEach(cb => cb());
+    // 防止内存泄漏
     if (this.loopFlag) cancelLoop(this.loopFlag);
   }
 

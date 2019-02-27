@@ -3,10 +3,12 @@ import { camera, scene } from './envirenment/scene';
 import sea from './objects/sea';
 // import sky from './objects/sky';
 import airplane from './objects/airplane';
+import { OrbitControls } from 'three-orbitcontrols-ts';
 
 import './index.less';
 import { loop } from './loop';
 import Enemy from './objects/enemy';
+import boss from './objects/boss';
 
 class Game {
   private container = document.getElementById('world') as HTMLDivElement;
@@ -48,6 +50,8 @@ class Game {
 
     this.scene.add(enemy);
 
+    this.scene.add(boss);
+
     // 定义渲染器的尺寸；在这里它会填满整个屏幕
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -64,6 +68,8 @@ class Game {
 
     // 监听屏幕，缩放屏幕更新相机和渲染器的尺寸
     window.addEventListener('resize', this.handleWindowResize, false);
+
+    // new OrbitControls(camera);
 
     loop(time => {
       // 渲染场景

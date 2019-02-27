@@ -27,14 +27,14 @@ const camera = new PerspectiveCamera(
 );
 
 // 设置相机的位置
-camera.position.x = 0;  
-camera.position.z = 0;    
-camera.position.y = 600;
+camera.position.x = 200;  
+camera.position.z = 300;    
+camera.position.y = 200;
 
 // 让相机从上方往下看
 camera.lookAt(0, 0, 0);
 // 调整相机角度
-camera.rotation.z -= Math.PI / 2;
+// camera.rotation.z -= Math.PI / 2;
 
 scene.add(hemisphereLight, shadowLight, ambientLight);
 

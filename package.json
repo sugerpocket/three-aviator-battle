@@ -32,6 +32,8 @@
     "less-loader": "^4.1.0",
     "less-plugin-clean-css": "^1.5.1",
     "style-loader": "^0.23.1",
+    "three-orbit-controls": "^82.1.0",
+    "three-orbitcontrols-ts": "^0.1.2",
     "ts-loader": "^5.3.3",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3",
