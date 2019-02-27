@@ -1,17 +1,17 @@
-import { Object3D, CylinderGeometry, Mesh, MeshPhongMaterial, Shape, Geometry, TextureLoader } from 'three';
+import { Object3D, CylinderGeometry, Mesh, MeshPhongMaterial, Shape, Geometry, TextureLoader, ColorKeywords, PlaneGeometry, SphereGeometry, Color } from 'three';
 import Colors from '../colors';
 
 class Boss extends Object3D {
-  // 机舱
-  private createCockpit() {
+  // 机身
+  private createBody() {
     const geometry = new CylinderGeometry(10, 10, 60, 6, 3);
     const material = new MeshPhongMaterial({
       color: Colors.Red,
       flatShading: true,
     });
-    const cockpit = new Mesh(geometry, material);
-    cockpit.castShadow = true;
-    cockpit.receiveShadow = true;
+    const body = new Mesh(geometry, material);
+    body.castShadow = true;
+    body.receiveShadow = true;
 
     const { vertices } = geometry;
 
@@ -31,15 +31,63 @@ class Boss extends Object3D {
       vertices[i + 18].y = -10;
     }
     // geometry.vertices[5].z = 100;
-    this.add(cockpit);
+    this.add(body);
   }
 
   // 尾翼
   private createTail() {
-    const leftGeometry = new CylinderGeometry(50, 50, 2, 4, 1);
-    const rightGeometry = new CylinderGeometry(50, 50, 2, 4, 1);
+    const height = 10;
+    const width = 14;
+    const geometry = new PlaneGeometry(width, height, 1, 1);
+    const material = new MeshPhongMaterial({
+      color: Colors.Red,
+      flatShading: true,
+    });
+
+    const tail = new Object3D();
+
+    const left = new Mesh(geometry.clone(), material.clone());
+    const right = new Mesh(geometry.clone(), material.clone());
+
+    tail.castShadow = left.castShadow = right.castShadow = true;
+    tail.receiveShadow = left.receiveShadow = right.receiveShadow = true;
+
+    left.position.y = -10 + height / 2;
+    right.position.y = -10 + height / 2;
+    left.position.x = width / 2;
+    right.position.x = width / 2;
+    left.position.z = 6;
+    right.position.z = -6;
+
+    left.rotateX(Math.PI / 36);
+    right.rotateX(-Math.PI / 36);
+
+    left.rotateY(-Math.PI / 6);
+    right.rotateY(Math.PI / 6);
+
+    tail.add(left, right);
+
+    this.add(tail);
   }
 
+  // 机舱
+  private createCabin() {
+    const geometry = new SphereGeometry(5, 5, 5);
+    const material = new MeshPhongMaterial({
+      color: Colors.Blue,
+      flatShading: true,
+    });
+
+
+    const cabin = new Mesh(geometry, material);
+
+    cabin.position.y = 3;
+    cabin.position.x = 8;
+
+    this.add(cabin);
+  }
+
+  // 机翼
   private createWing() {
     const geometry = new CylinderGeometry(54, 54, 0.2, 6, 1);
     const material = new MeshPhongMaterial({
@@ -77,17 +125,24 @@ class Boss extends Object3D {
     this.add(wing);
   }
 
+  private createCannon() {
+    // const geometry = new 
+  }
+
   constructor() {
     super();
 
-    this.createCockpit();
+    this.createBody();
     this.createWing();
-
+    this.createTail();
+    this.createCabin();
+    this.createCannon();
   }
 }
 
 const boss = new Boss();
 
 boss.position.set(0, 100, 0);
+boss.rotateZ(Math.PI / 2);
 
 export default boss;

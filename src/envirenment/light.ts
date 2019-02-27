@@ -14,7 +14,7 @@ const ambientLight = new AmbientLight(0xdc8874, .5);
 
 // 设置光源的方向。  
 // 位置不同，方向光作用于物体的面也不同，看到的颜色也不同
-shadowLight.position.set(150, 350, 350);
+shadowLight.position.set(150, 350, 300);
 
 // 开启光源投影 
 shadowLight.castShadow = true;
