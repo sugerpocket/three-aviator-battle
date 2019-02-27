@@ -2,7 +2,7 @@ import { Object3D, CylinderGeometry, Mesh, MeshPhongMaterial, Shape, Geometry, T
 import Colors from '../colors';
 
 class Boss extends Object3D {
-
+  // 机舱
   private createCockpit() {
     const geometry = new CylinderGeometry(10, 10, 60, 6, 3);
     const material = new MeshPhongMaterial({
@@ -12,17 +12,29 @@ class Boss extends Object3D {
     const cockpit = new Mesh(geometry, material);
     cockpit.castShadow = true;
     cockpit.receiveShadow = true;
-    console.log(geometry.vertices);
+
+    const { vertices } = geometry;
+
     for (let i = 0; i < 6; i++) {
-      geometry.vertices[i].x = 0;
-      geometry.vertices[i].z = 0;
-      geometry.vertices[i + 18].x = 0;
-      geometry.vertices[i + 18].z = 0;
+      vertices[i].x = 0;
+      vertices[i].z = 0;
+      if (i % 3 === 0) {
+        vertices[i + 6].z = vertices[i + 6].z * 1.2;
+        vertices[i + 12].z = vertices[i + 12].z * 0.9;
+      } else {
+        vertices[i + 6].z = vertices[i + 6].z * 1.6;
+        vertices[i + 12].z = vertices[i + 12].z * 1.2;
+      }
+      vertices[i + 12].x = vertices[i + 12].x * 0.8;
+      vertices[i + 18].x = 0.5 * vertices[i + 18].x;
+      vertices[i + 18].z = 0.5 * vertices[i + 18].z;
+      vertices[i + 18].y = -10;
     }
     // geometry.vertices[5].z = 100;
     this.add(cockpit);
   }
 
+  // 尾翼
   private createTail() {
     const leftGeometry = new CylinderGeometry(50, 50, 2, 4, 1);
     const rightGeometry = new CylinderGeometry(50, 50, 2, 4, 1);
@@ -34,11 +46,6 @@ class Boss extends Object3D {
       color: Colors.Red,
       flatShading: true,
     });
-
-    function setScalePos(fIndex: number, sIndex: number, scale: number) {
-      vertices[fIndex].x += scale * (vertices[sIndex].x - vertices[fIndex].x);
-      vertices[fIndex].z += scale * (vertices[sIndex].z - vertices[fIndex].z);
-    }
 
     const { vertices } = geometry;
     vertices[4].x += 0.64 * (vertices[1].x - vertices[4].x);
