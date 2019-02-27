@@ -27,9 +27,9 @@ const camera = new PerspectiveCamera(
 );
 
 // 设置相机的位置
-camera.position.x = 200;  
-camera.position.z = 300;    
-camera.position.y = 200;
+camera.position.x = 300;  
+camera.position.z = 0;    
+camera.position.y = 0;
 
 // 让相机从上方往下看
 camera.lookAt(0, 0, 0);
