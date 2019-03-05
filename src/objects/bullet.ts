@@ -1,11 +1,12 @@
-import { Mesh, TetrahedronGeometry, MeshPhongMaterial, Vector3, Object3D } from 'three';
+import { Mesh, TetrahedronGeometry, MeshPhongMaterial, Vector3, Object3D, Color } from 'three';
 import Colors from '../colors';
 import { loop, cancelLoop } from '../loop';
 import airplane from './airplane';
 import { TweenMax, Power2 } from 'gsap';
+import game from '../game';
 
-class EnemyParticle extends Mesh {
-  constructor(position: Vector3, color: number, scale: number) {
+class BulletParticle extends Mesh {
+  constructor(position: Vector3, color: Color, scale: number) {
     super(
       new TetrahedronGeometry(3, 0),
       new MeshPhongMaterial({
@@ -36,18 +37,19 @@ class EnemyParticle extends Mesh {
 
 type DestroyCallback = () => void;
 
-export default class Enemy extends Mesh {
+export default class Bullet extends Mesh {
   private destroyCallbacks: DestroyCallback[] = [];
+  private updateCallbacks: FrameRequestCallback[] = [];
 
   private loopFlag: number | null = null;
 
   private size = .35;
 
-  constructor() {
+  constructor(position: Vector3, color: number, scale: number) {
     super(
       new TetrahedronGeometry(8, 2),
       new MeshPhongMaterial({
-        color: Colors.Red,
+        color: color,
         shininess: 0,
         specular: 0xffffff,
         flatShading: true,
@@ -56,8 +58,9 @@ export default class Enemy extends Mesh {
 
     this.castShadow = true;
 
-    this.position.y = 100;
+    this.position.set(position.x, position.y, position.z);
 
+    this.size = scale;
     this.scale.set(this.size, this.size, this.size);
 
     this.loopFlag = loop(this.update);
@@ -67,8 +70,14 @@ export default class Enemy extends Mesh {
     this.rotation.z += Math.random() * .1;
     this.rotation.y += Math.random() * .1;
 
-    if (airplane.isCollided(this, 20)) {
-      this.destroy();
+    this.updateCallbacks.forEach(cb => cb(time));
+    
+    // 超出范围 +50 移除子弹 
+    const xmax = game.xMax + 50;
+    const zmax = game.zMax + 50;
+
+    if (this.position.x > xmax || this.position.x < -xmax || this.position.z > zmax || this.position.z < -zmax) {
+      this.drop();
     }
   }
 
@@ -76,8 +85,8 @@ export default class Enemy extends Mesh {
   private explode() {
     const n = 15;
     this.visible = false;
-    for (let i = 0; i < n; i++){
-      const particle = new EnemyParticle(this.position, Colors.Red, this.size * 2);
+    for (let i = 0; i < n; i++) {
+      const particle = new BulletParticle(this.position, (this.material as MeshPhongMaterial).color, this.size * 2);
       (this.parent as Object3D).add(particle);
       particle.visible = true;
       particle.position.y = this.position.y;
@@ -86,11 +95,20 @@ export default class Enemy extends Mesh {
     }
   }
 
-  private destroy() {
-    this.explode();
+  public drop() {
+    if (this.parent) this.parent.remove(this);
     this.destroyCallbacks.forEach(cb => cb());
     // 防止内存泄漏
     if (this.loopFlag) cancelLoop(this.loopFlag);
+  }
+
+  public destroy() {
+    this.explode();
+    this.drop();
+  }
+
+  public onUpdate(callback: FrameRequestCallback) {
+    this.updateCallbacks.push(callback);
   }
 
   public onDestroy(callback: DestroyCallback) {

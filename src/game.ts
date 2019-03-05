@@ -3,11 +3,9 @@ import { camera, scene } from './envirenment/scene';
 import sea from './objects/sea';
 // import sky from './objects/sky';
 import airplane from './objects/airplane';
-import { OrbitControls } from 'three-orbitcontrols-ts';
 
 import './index.less';
 import { loop } from './loop';
-import Enemy from './objects/enemy';
 import boss from './objects/boss';
 
 class Game {
@@ -18,7 +16,7 @@ class Game {
     alpha: true, 
     // 开启抗锯齿，但这样会降低性能。
     // 不过，由于我们的项目基于低多边形的，那还好 :) 
-    antialias: true 
+    antialias: true
   });
 
   public scene = scene;
@@ -42,15 +40,9 @@ class Game {
     // 添加飞机
     this.scene.add(airplane);
 
-    let enemy: Enemy | null = new Enemy();
-    enemy.onDestroy(() => {
-      scene.remove(enemy as Enemy);
-      enemy = null;
-    });
-
-    this.scene.add(enemy);
-
     this.scene.add(boss);
+
+    // this.scene.add(new Bullet());
 
     // 定义渲染器的尺寸；在这里它会填满整个屏幕
     this.renderer.setSize(window.innerWidth, window.innerHeight);

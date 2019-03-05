@@ -1,16 +1,17 @@
-import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry, Vector3 } from 'three';
+import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry, Vector3, SphereGeometry, ShaderMaterial } from 'three';
 import Colors from '../colors';
 import { loop } from '../loop';
 import { camera } from '../envirenment/scene';
 import game from '../game';
+import Bullet from './bullet';
 
-enum DirectionKeys {
+enum ControlKeys {
   UP = 'KeyW',
   LEFT = 'KeyA',
   DOWN = 'KeyS',
   RIGHT = 'KeyD',
+  SHOT = 'Space',
 }
-
 class AirPlane extends Object3D {
 
   // 创建机舱
@@ -19,9 +20,10 @@ class AirPlane extends Object3D {
     new MeshPhongMaterial({
       color: Colors.Red,
       flatShading: true,
+      fog: true,
     }),
   );
-  
+
   // 创建引擎
   private engine = new Mesh(
     new BoxGeometry(20, 50, 50, 1, 1, 1),
@@ -65,12 +67,17 @@ class AirPlane extends Object3D {
   );
 
   private speed: Readonly<number> = 2;
-  
-  private pressDirectionKeys: { [key: string]: boolean} = {
-    [DirectionKeys.UP]: false,
-    [DirectionKeys.LEFT]: false,
-    [DirectionKeys.DOWN]: false,
-    [DirectionKeys.RIGHT]: false,
+
+  private bulletSpeed: Readonly<number> = 4;
+  private shotInterval: Readonly<number> = 10;
+  private nextShotTime: number = 0;
+
+  private pressControlKeys: { [key: string]: boolean } = {
+    [ControlKeys.UP]: false,
+    [ControlKeys.LEFT]: false,
+    [ControlKeys.DOWN]: false,
+    [ControlKeys.RIGHT]: false,
+    [ControlKeys.SHOT]: false,
   };
 
   private maxRoatation: Readonly<number> = 0.6;
@@ -104,7 +111,7 @@ class AirPlane extends Object3D {
     // 螺旋桨
     this.propeller.castShadow = true;
     this.propeller.receiveShadow = true;
-   
+
     // 创建螺旋桨的桨叶
     this.blade.position.set(8, 0, 0);
     this.blade.castShadow = true;
@@ -117,9 +124,9 @@ class AirPlane extends Object3D {
     this.position.y = 100;
     this.position.x = -200;
 
-    // 用键位控制移动
-    window.addEventListener('keydown', evt => (typeof this.pressDirectionKeys[evt.code] !== 'boolean') || (this.pressDirectionKeys[evt.code] = true));
-    window.addEventListener('keyup', evt => (typeof this.pressDirectionKeys[evt.code] !== 'boolean') || (this.pressDirectionKeys[evt.code] = false));
+    // 用键位控制移动 射击
+    window.addEventListener('keydown', evt => (typeof this.pressControlKeys[evt.code] !== 'boolean') || (this.pressControlKeys[evt.code] = true));
+    window.addEventListener('keyup', evt => (typeof this.pressControlKeys[evt.code] !== 'boolean') || (this.pressControlKeys[evt.code] = false));
 
     loop(this.update);
   }
@@ -131,24 +138,24 @@ class AirPlane extends Object3D {
     // 计算最终旋转角度
     let xrotation = 0;
 
-    if (this.pressDirectionKeys[DirectionKeys.UP]) {
+    if (this.pressControlKeys[ControlKeys.UP]) {
       xshift += this.speed;
     }
 
-    if (this.pressDirectionKeys[DirectionKeys.DOWN]) {
+    if (this.pressControlKeys[ControlKeys.DOWN]) {
       xshift -= this.speed;
     }
 
-    if (this.pressDirectionKeys[DirectionKeys.RIGHT]) {
+    if (this.pressControlKeys[ControlKeys.RIGHT]) {
       zshift += this.speed;
       xrotation += this.maxRoatation;
     }
 
-    if (this.pressDirectionKeys[DirectionKeys.LEFT]) {
+    if (this.pressControlKeys[ControlKeys.LEFT]) {
       zshift -= this.speed;
       xrotation -= this.maxRoatation;
     }
-    
+
     // 判断是否在视野范围内
     const temp = this.position.clone();
     temp.z += zshift;
@@ -168,6 +175,24 @@ class AirPlane extends Object3D {
     }
 
     this.propeller.rotation.x += 0.3;
+
+    // 射击
+    if (this.pressControlKeys[ControlKeys.SHOT] && this.nextShotTime <= 0) { // 如果按下 shot 且冷却到了
+      this.shot();
+      this.nextShotTime = this.shotInterval;
+    } else if (this.nextShotTime > 0) { // 如果冷却时间还没到, 冷却 -1
+      this.nextShotTime -= 1;
+    }
+  }
+
+  private shot() {
+    if (this.parent) {
+      const bullet = new Bullet(this.position, Colors.Yellow, 0.25);
+      bullet.onUpdate(() => {
+        bullet.position.x += this.bulletSpeed;
+      });
+      this.parent.add(bullet);
+    }
   }
 
   // 弱智版碰撞检测

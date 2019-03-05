@@ -6,6 +6,7 @@ enum Colors {
   BrownDark = 0x23190f,  
   Blue = 0x68c3c0,
   LightYellow = 0xf7d9aa,
+  Yellow = 0xffd700,
 }
 
 export default Colors;
