@@ -1,9 +1,9 @@
 import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry, Vector3, SphereGeometry, ShaderMaterial } from 'three';
 import Colors from '../colors';
 import { loop } from '../loop';
-import { camera } from '../envirenment/scene';
 import game from '../game';
 import Bullet from './bullet';
+import boss from './boss';
 
 enum ControlKeys {
   UP = 'KeyW',
@@ -190,15 +190,19 @@ class AirPlane extends Object3D {
       const bullet = new Bullet(this.position, Colors.Yellow, 0.25);
       bullet.onUpdate(() => {
         bullet.position.x += this.bulletSpeed;
+        // 碰到 boss 子弹销毁
+        if (boss.isCollided(bullet)) {
+          bullet.destroy();
+        }
       });
       this.parent.add(bullet);
     }
   }
 
   // 弱智版碰撞检测
-  public isCollided(target: THREE.Object3D, limit: number) {
+  public isCollided(target: THREE.Object3D) {
     const distance = this.position.clone().sub(target.position.clone()).length();
-    return distance <= limit;
+    return distance <= 20;
   }
 }
 

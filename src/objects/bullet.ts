@@ -1,7 +1,5 @@
 import { Mesh, TetrahedronGeometry, MeshPhongMaterial, Vector3, Object3D, Color } from 'three';
-import Colors from '../colors';
 import { loop, cancelLoop } from '../loop';
-import airplane from './airplane';
 import { TweenMax, Power2 } from 'gsap';
 import game from '../game';
 
@@ -16,6 +14,7 @@ class BulletParticle extends Mesh {
         flatShading: true,
       }),
     );
+    this.position.set(position.x, position.y, position.z);
     this.scale.set(scale, scale, scale);
   }
 
@@ -30,7 +29,6 @@ class BulletParticle extends Mesh {
     TweenMax.to(this.position, speed, { x: targetX, z: targetZ, delay: Math.random() * .1, ease: Power2.easeOut, onComplete: () => {
       if(this.parent) this.parent.remove(this);
       this.scale.set(1, 1, 1);
-      // particlesPool.unshift(_this);
     }});
   }
 }
@@ -89,8 +87,6 @@ export default class Bullet extends Mesh {
       const particle = new BulletParticle(this.position, (this.material as MeshPhongMaterial).color, this.size * 2);
       (this.parent as Object3D).add(particle);
       particle.visible = true;
-      particle.position.y = this.position.y;
-      particle.position.x = this.position.x;
       particle.explode();
     }
   }

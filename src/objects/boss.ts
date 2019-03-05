@@ -138,6 +138,12 @@ class Boss extends Object3D {
     this.createCabin();
     this.createCannon();
   }
+
+  // 弱智版碰撞检测
+  public isCollided(target: THREE.Object3D) {
+    const distance = this.position.clone().sub(target.position.clone()).length();
+    return distance <= 40;
+  }
 }
 
 const boss = new Boss();
