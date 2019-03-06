@@ -32,18 +32,6 @@ class Game {
   }
 
   constructor() {
-    // 添加大海
-    this.scene.add(sea);
-    // 添加天空
-    // scene.add(sky);
-    // 添加飞机
-    this.scene.add(airplane);
-
-    this.scene.add(boss);
-    setInterval(() => boss.shot(0, 10, 'left'), 2000);
-
-    // this.scene.add(new Bullet());
-
     // 定义渲染器的尺寸；在这里它会填满整个屏幕
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -55,13 +43,20 @@ class Game {
 
     this.renderer.render(scene, camera);
 
-    // 获取地图极限坐标
-    this.maxCoordinate = this.convertTo3DCoordinate(window.innerWidth, window.innerHeight);
-
     // 监听屏幕，缩放屏幕更新相机和渲染器的尺寸
     window.addEventListener('resize', this.handleWindowResize, false);
+    // 获取地图极限坐标
+    this.maxCoordinate = this.convertTo3DCoordinate(window.innerWidth, window.innerHeight);
+    // 添加大海
+    this.scene.add(sea);
+    // 添加天空
+    // scene.add(sky);
+    // 添加飞机
+    this.scene.add(airplane);
+    airplane.position.set(-this.xMax / 2, 100, 0);
 
-    // new OrbitControls(camera);
+    this.scene.add(boss);
+    boss.position.set(this.xMax / 2, 100, 0);
 
     loop(time => {
       // 渲染场景

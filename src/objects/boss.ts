@@ -1,8 +1,11 @@
 import { Object3D, CylinderGeometry, Mesh, MeshPhongMaterial, PlaneGeometry, SphereGeometry, Vector3 } from 'three';
 import Colors from '../colors';
 import Bullet from './bullet';
+import { loop } from '../loop';
 
 class Boss extends Object3D {
+  private xspeed = 0;
+  private zspeed = 0;
   // 机身
   private body = new Mesh(
     new CylinderGeometry(10, 10, 60, 6, 3),
@@ -169,9 +172,11 @@ class Boss extends Object3D {
     this.createTail();
     this.createCabin();
     this.createCannons();
+
+    loop(this.update);
   }
 
-  public async shot(angle: number, speed: number, cannon: 'left' | 'right') {
+  private shot(angle: number, speed: number, cannon: 'left' | 'right') {
     if (this.parent) {
       const position = this.getCannonPosition(cannon);
 
@@ -188,6 +193,10 @@ class Boss extends Object3D {
     }
   }
 
+  private update = () => {
+    this.xspeed;
+  }
+
   // 弱智版碰撞检测
   public isCollided(target: THREE.Object3D) {
     const distance = this.position.clone().sub(target.position.clone()).length();
@@ -197,7 +206,6 @@ class Boss extends Object3D {
 
 const boss = new Boss();
 
-boss.position.set(0, 100, 0);
 boss.rotateZ(Math.PI / 2);
 
 export default boss;
