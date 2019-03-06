@@ -1,7 +1,6 @@
-import { Vector2, Vector3, WebGLRenderer } from 'three';
+import { Vector3, WebGLRenderer } from 'three';
 import { camera, scene } from './envirenment/scene';
 import sea from './objects/sea';
-// import sky from './objects/sky';
 import airplane from './objects/airplane';
 
 import './index.less';
@@ -41,6 +40,7 @@ class Game {
     this.scene.add(airplane);
 
     this.scene.add(boss);
+    setInterval(() => boss.shot(0, 10, 'left'), 2000);
 
     // this.scene.add(new Bullet());
 
