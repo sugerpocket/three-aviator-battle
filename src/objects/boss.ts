@@ -194,6 +194,9 @@ class Boss extends Object3D {
       bullet.onUpdate(() => {
         bullet.position.x += xspeed;
         bullet.position.z += zspeed;
+        if (airplane.isCollided(bullet)) {
+          bullet.destroy();
+        }
       });
 
       this.parent.add(bullet);
