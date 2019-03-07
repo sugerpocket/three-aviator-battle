@@ -1,11 +1,12 @@
 import { Object3D, CylinderGeometry, Mesh, MeshPhongMaterial, PlaneGeometry, SphereGeometry, Vector3 } from 'three';
 import Colors from '../colors';
 import Bullet from './bullet';
-import { loop } from '../loop';
+import { loop, cancelLoop } from '../loop';
+import game from '../game';
+import airplane from './airplane';
 
 class Boss extends Object3D {
-  private xspeed = 0;
-  private zspeed = 0;
+  private actionLock: boolean = false;
   // 机身
   private body = new Mesh(
     new CylinderGeometry(10, 10, 60, 6, 3),
@@ -176,6 +177,12 @@ class Boss extends Object3D {
     loop(this.update);
   }
 
+  private cd(frame: number) {
+    return new Promise(resolve => {
+      const flag = loop(() => --frame <= 0 && (cancelLoop(flag), resolve(frame)));
+    });
+  }
+
   private shot(angle: number, speed: number, cannon: 'left' | 'right') {
     if (this.parent) {
       const position = this.getCannonPosition(cannon);
@@ -193,8 +200,144 @@ class Boss extends Object3D {
     }
   }
 
-  private update = () => {
-    this.xspeed;
+  /**
+   * 指定目标地点进行移动
+   * @param x {string} 目的 x 坐标
+   * @param z {number} 目的 z 坐标
+   * @param speed {number} 每帧移动的距离
+   */
+  private moveTo(x: number, z: number, speed: number) {
+    return new Promise((resolve, reject) => {
+      if (!game) {
+        return reject('game not start');
+      }
+      if (Math.abs(x) > game.xMax || Math.abs(z) > game.zMax) {
+        console.log('out of boundary');
+      }
+      const xshift = x - this.position.x;
+      const zshift = z - this.position.z;
+      if (xshift === 0 && zshift === 0) {
+        return resolve();
+      }
+
+      const xspeed = (speed * xshift) / (Math.abs(xshift) + Math.abs(zshift));
+      const zspeed = (speed * zshift) / (Math.abs(xshift) + Math.abs(zshift));
+
+      let xCurShift = 0;
+      let zCurShift = 0;
+
+      const flag = loop(() => {
+        xCurShift += xspeed;
+        zCurShift += zspeed;
+
+        this.position.x += xspeed;
+        this.position.z += zspeed;
+
+        if (Math.abs(xCurShift) >= Math.abs(xshift) && Math.abs(zCurShift) >= Math.abs(zshift)) {
+          cancelLoop(flag);
+          resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * 
+   * @param x {number} 目标点 x 坐标
+   * @param z {number} 目标点 y 坐标
+   * @param cannon {'left' | 'right'} 哪个炮管发射
+   */
+  private shotTo(x: number, z: number, cannon: 'left' | 'right') {
+    console.log
+    const position = this.getCannonPosition(cannon);
+    const xshift = x - position.x;
+    const zshift = z - position.z;
+
+    this.shot(Math.atan(-zshift / xshift), 10, cannon);
+  }
+
+  // 三种技能
+  /**
+   * 平移扫射
+   */
+  private async directShot() {
+    let time = 0;
+    const shotInterval = 10;
+    const flag = loop(() => {
+      time %= shotInterval;
+      if (time === 0) {
+        this.shot(0, 10, 'left');
+        this.shot(0, 10, 'right');
+      }
+      time++;
+    });
+    await this.moveTo(game.xMax / 2, game.zMax - 1, 5);
+    await this.moveTo(game.xMax / 2, -game.zMax + 1, 5);
+    await this.moveTo(game.xMax / 2, 0, 5);
+    cancelLoop(flag);
+  }
+
+  /**
+   * 随机移动到6个点进行点射
+   */
+  private async fixedShot() {
+    for (let i = 0; i < 3; i++) {
+      const x = Math.random() * game.xMax;
+      const z = (0.5 - Math.random()) * game.zMax;
+      await this.moveTo(x, z, 10);
+      this.shotTo(airplane.position.x, airplane.position.z, 'left');
+      this.shotTo(airplane.position.x, airplane.position.z, 'right');
+      await this.cd(2);
+      this.shotTo(airplane.position.x, airplane.position.z, 'left');
+      this.shotTo(airplane.position.x, airplane.position.z, 'right');
+      await this.cd(2);
+      this.shotTo(airplane.position.x, airplane.position.z, 'left');
+      this.shotTo(airplane.position.x, airplane.position.z, 'right');
+      await this.cd(2);
+      this.shotTo(airplane.position.x, airplane.position.z, 'left');
+      this.shotTo(airplane.position.x, airplane.position.z, 'right');
+      await this.cd(5);
+    }
+  }
+
+  /**
+   * 随机移动到某点进行散射
+   */
+  private async scatterShot() {
+    for (let i = 0; i < 3; i++) {
+      const x = Math.random() * game.xMax;
+      const z = (0.5 - Math.random()) * game.zMax;
+      await this.moveTo(x, z, 5);
+      for (let j = 0; j < 3; j++) {
+        const angleShift = (1 - j) * (Math.PI / 9);
+        this.shot(0 + angleShift, 10, 'left');
+        this.shot(0 + angleShift, 10, 'right');
+        this.shot(Math.PI / 4 + angleShift, 10, 'left');
+        this.shot(Math.PI / 4 + angleShift, 10, 'right');
+        this.shot(-Math.PI / 4 + angleShift, 10, 'left');
+        this.shot(-Math.PI / 4 + angleShift, 10, 'right');
+        await this.cd(10);
+      }
+      await this.cd(60);
+    }
+  }
+
+  private update = async () => {
+    if (!this.actionLock) {
+      this.actionLock = true;
+      const action = Math.floor(Math.random() * 3) % 3;
+      try {
+        switch (action) {
+          case 0: await this.directShot(); break;
+          case 1: await this.fixedShot(); break;
+          case 2: await this.scatterShot(); break;
+        }
+        await this.moveTo(game.xMax / 2, 0, 2);
+      } finally {
+        await this.cd(240);
+        this.actionLock = false;
+      }
+    }
   }
 
   // 弱智版碰撞检测

@@ -61,6 +61,7 @@ const config: webpack.Configuration = {
     hot: true,
     port: 3000,
     compress: true,
+    host: '0.0.0.0',
     publicPath: '/',
     contentBase: publicPath
   }
