@@ -248,7 +248,6 @@ class Boss extends Object3D {
    * @param cannon {'left' | 'right'} 哪个炮管发射
    */
   private shotTo(x: number, z: number, cannon: 'left' | 'right') {
-    console.log
     const position = this.getCannonPosition(cannon);
     const xshift = x - position.x;
     const zshift = z - position.z;
@@ -287,16 +286,13 @@ class Boss extends Object3D {
       await this.moveTo(x, z, 10);
       this.shotTo(airplane.position.x, airplane.position.z, 'left');
       this.shotTo(airplane.position.x, airplane.position.z, 'right');
-      await this.cd(2);
+      await this.cd(4);
       this.shotTo(airplane.position.x, airplane.position.z, 'left');
       this.shotTo(airplane.position.x, airplane.position.z, 'right');
-      await this.cd(2);
+      await this.cd(4);
       this.shotTo(airplane.position.x, airplane.position.z, 'left');
       this.shotTo(airplane.position.x, airplane.position.z, 'right');
-      await this.cd(2);
-      this.shotTo(airplane.position.x, airplane.position.z, 'left');
-      this.shotTo(airplane.position.x, airplane.position.z, 'right');
-      await this.cd(5);
+      await this.cd(20);
     }
   }
 
