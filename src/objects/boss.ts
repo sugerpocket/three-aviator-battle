@@ -85,7 +85,6 @@ class Boss extends Object3D {
     }),
   );
   private createCabin() {
-
     this.cabin.position.y = 3;
     this.cabin.position.x = 8;
 
@@ -101,7 +100,6 @@ class Boss extends Object3D {
     })
   );
   private createWing() {
-
     const { vertices } = this.wing.geometry as CylinderGeometry;
     vertices[4].x += 0.64 * (vertices[1].x - vertices[4].x);
     vertices[4].z += 0.64 * (vertices[1].z - vertices[4].z);
@@ -127,7 +125,6 @@ class Boss extends Object3D {
     this.wing.rotateZ(Math.PI / 2);
     this.wing.rotateY(Math.PI / 6);
     this.wing.position.y = -24;
-    
 
     this.add(this.wing);
   }
@@ -145,7 +142,7 @@ class Boss extends Object3D {
 
     const left = new Mesh(geometry, material);
     const right = new Mesh(geometry, material);
-    
+
     left.position.z += zshift;
     right.position.z -= zshift;
     left.position.y += yshift;
@@ -183,7 +180,14 @@ class Boss extends Object3D {
     });
   }
 
-  private shot(angle: number, speed: number, cannon: 'left' | 'right') {
+  /**
+   * 向指定角度以指定速度发射子弹
+   * @param angle {number} 射击角度
+   * @param speed {number} 子弹速度
+   * @param cannon {'left' | 'right'} 指定机炮
+   * @param dmg {number} 伤害
+   */
+  private shot(angle: number, speed: number, cannon: 'left' | 'right', dmg: number) {
     if (this.parent) {
       const position = this.getCannonPosition(cannon);
 
@@ -194,9 +198,7 @@ class Boss extends Object3D {
       bullet.onUpdate(() => {
         bullet.position.x += xspeed;
         bullet.position.z += zspeed;
-        if (airplane.isCollided(bullet)) {
-          bullet.destroy();
-        }
+        if (airplane.isCollided(bullet)) bullet.destroy();
       });
 
       this.parent.add(bullet);
@@ -245,17 +247,17 @@ class Boss extends Object3D {
   }
 
   /**
-   * 
+   * 向某点发射子弹
    * @param x {number} 目标点 x 坐标
    * @param z {number} 目标点 y 坐标
    * @param cannon {'left' | 'right'} 哪个炮管发射
    */
-  private shotTo(x: number, z: number, cannon: 'left' | 'right') {
+  private shotTo(x: number, z: number, cannon: 'left' | 'right', dmg: number) {
     const position = this.getCannonPosition(cannon);
     const xshift = x - position.x;
     const zshift = z - position.z;
 
-    this.shot(Math.atan(-zshift / xshift), 10, cannon);
+    this.shot(Math.atan(-zshift / xshift), 10, cannon, dmg);
   }
 
   // 三种技能
@@ -268,8 +270,8 @@ class Boss extends Object3D {
     const flag = loop(() => {
       time %= shotInterval;
       if (time === 0) {
-        this.shot(0, 10, 'left');
-        this.shot(0, 10, 'right');
+        this.shot(0, 10, 'left', 1);
+        this.shot(0, 10, 'right', 1);
       }
       time++;
     });
@@ -287,14 +289,14 @@ class Boss extends Object3D {
       const x = Math.random() * game.xMax;
       const z = (0.5 - Math.random()) * game.zMax;
       await this.moveTo(x, z, 10);
-      this.shotTo(airplane.position.x, airplane.position.z, 'left');
-      this.shotTo(airplane.position.x, airplane.position.z, 'right');
+      this.shotTo(airplane.position.x, airplane.position.z, 'left', 1);
+      this.shotTo(airplane.position.x, airplane.position.z, 'right', 1);
       await this.cd(4);
-      this.shotTo(airplane.position.x, airplane.position.z, 'left');
-      this.shotTo(airplane.position.x, airplane.position.z, 'right');
+      this.shotTo(airplane.position.x, airplane.position.z, 'left', 1);
+      this.shotTo(airplane.position.x, airplane.position.z, 'right', 1);
       await this.cd(4);
-      this.shotTo(airplane.position.x, airplane.position.z, 'left');
-      this.shotTo(airplane.position.x, airplane.position.z, 'right');
+      this.shotTo(airplane.position.x, airplane.position.z, 'left', 1);
+      this.shotTo(airplane.position.x, airplane.position.z, 'right', 1);
       await this.cd(20);
     }
   }
@@ -309,12 +311,12 @@ class Boss extends Object3D {
       await this.moveTo(x, z, 5);
       for (let j = 0; j < 3; j++) {
         const angleShift = (1 - j) * (Math.PI / 9);
-        this.shot(0 + angleShift, 10, 'left');
-        this.shot(0 + angleShift, 10, 'right');
-        this.shot(Math.PI / 4 + angleShift, 10, 'left');
-        this.shot(Math.PI / 4 + angleShift, 10, 'right');
-        this.shot(-Math.PI / 4 + angleShift, 10, 'left');
-        this.shot(-Math.PI / 4 + angleShift, 10, 'right');
+        this.shot(0 + angleShift, 10, 'left', 1);
+        this.shot(0 + angleShift, 10, 'right', 1);
+        this.shot(Math.PI / 4 + angleShift, 10, 'left', 1);
+        this.shot(Math.PI / 4 + angleShift, 10, 'right', 1);
+        this.shot(-Math.PI / 4 + angleShift, 10, 'left', 1);
+        this.shot(-Math.PI / 4 + angleShift, 10, 'right', 1);
         await this.cd(10);
       }
       await this.cd(60);

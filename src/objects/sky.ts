@@ -8,7 +8,6 @@ class Sky extends Object3D {
 
   constructor() {
     super();
-
     // 把云均匀地散布
     // 我们需要根据统一的角度放置它们
     const stepAngle = Math.PI * 2 / this.numberClouds;

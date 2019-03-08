@@ -1,5 +1,5 @@
-import { Vector3, WebGLRenderer } from 'three';
-import { camera, scene } from './envirenment/scene';
+import { Vector3, WebGLRenderer, Euler } from 'three';
+import { camera, scene, moveCamera } from './envirenment/scene';
 import sea from './objects/sea';
 import airplane from './objects/airplane';
 
@@ -58,6 +58,10 @@ class Game {
     this.scene.add(boss);
     boss.position.set(this.xMax / 2, 100, 0);
 
+    moveCamera(new Vector3(200, 100, 0), 10).then(() => {
+      moveCamera(new Vector3(0, 600, 0), 120);
+    });
+    // moveCamera(new Vector3(0, 600, 0), new Euler(0, 0, -Math.PI / 2), 240);
     loop(time => {
       // 渲染场景
       this.renderer.render(scene, camera);
