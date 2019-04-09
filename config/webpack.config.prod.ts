@@ -1,9 +1,9 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import CleanWebpackPlugin from 'clean-webpack-plugin';
+// import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { publicPath, buildPath } from './paths';
 
@@ -48,7 +48,7 @@ const config: webpack.Configuration = {
     path: buildPath
   },
   plugins: [
-    new CleanWebpackPlugin([buildPath]),
+    // new CleanWebpackPlugin([buildPath]),
     new HtmlWebpackPlugin({
       template: path.join(publicPath, 'index.html')
     }),

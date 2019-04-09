@@ -30,7 +30,7 @@ const camera = new PerspectiveCamera(
 
 // 设置相机的位置
 camera.position.x = 0;
-camera.position.z = 0;    
+camera.position.z = 0;
 camera.position.y = 600;
 
 // 让相机从上方往下看

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import CleanWebpackPlugin from 'clean-webpack-plugin';
+// import CleanWebpackPlugin from 'clean-webpack-plugin';
 
 import { publicPath, buildPath } from './paths';
 
@@ -51,7 +51,7 @@ const config: webpack.Configuration = {
     filename: '[name].bundle.js',
   },
   plugins: [
-    new CleanWebpackPlugin([buildPath]),
+    // new CleanWebpackPlugin([buildPath]),
     new HtmlWebpackPlugin({
       template: path.join(publicPath, 'index.html')
     }),
