@@ -17,7 +17,7 @@ export default class Cloud extends Object3D {
     // 云朵由随机 4-9 个方块生成
     const n = 4 + Math.floor(Math.random() * 6);
 
-    for (var i = 0; i < n; i++){
+    for (let i = 0; i < n; i++) {
     
       // 通过复制几何体创建网格
       const mesh = new Mesh(this.geometry, this.material); 

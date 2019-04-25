@@ -8,6 +8,11 @@
     ]
   },
   "rules": {
-    "no-debugger": false
+    "max-classes-per-file": false,
+    "ordered-imports": false,
+    "no-debugger": false,
+    "object-literal-sort-keys": false,
+    "interface-name": false,
+    "member-ordering": false
   }
 }

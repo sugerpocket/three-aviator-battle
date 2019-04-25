@@ -162,8 +162,12 @@ class AirPlane extends Object3D {
     temp.x += xshift;
 
     // 移动
-    if (Math.abs(temp.z) < game.zMax) this.position.z += zshift;
-    if (Math.abs(temp.x) < game.xMax) this.position.x += xshift;
+    if (Math.abs(temp.z) < game.zMax) {
+      this.position.z += zshift;
+    }
+    if (Math.abs(temp.x) < game.xMax) {
+      this.position.x += xshift;
+    }
 
     // 旋转直到到达指定角度
     if (this.rotation.x > xrotation) {

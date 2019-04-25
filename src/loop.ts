@@ -1,6 +1,6 @@
 let flag: number | null = null;
 
-const loopCallbacks: (FrameRequestCallback | null)[] = [];
+const loopCallbacks: Array<FrameRequestCallback | null> = [];
 
 function callLoop(time: number) {
   loopCallbacks.forEach(cb => typeof cb !== 'function' || cb(time));
@@ -8,7 +8,7 @@ function callLoop(time: number) {
 }
 
 export function loop(callback: FrameRequestCallback) {
-  let index = loopCallbacks.indexOf(null);
+  const index = loopCallbacks.indexOf(null);
   if (index === -1) {
     loopCallbacks[loopCallbacks.length] = callback;
   } else {
@@ -32,7 +32,9 @@ export function cancelLoop(index: number) {
     for (let i = loopCallbacks.length - 1; i >= 0; i--) {
       if (loopCallbacks[i] === null) {
         loopCallbacks.pop();
-      } else break;
+      } else {
+        break;
+      }
     }
   }
 

@@ -198,7 +198,9 @@ class Boss extends Object3D {
       bullet.onUpdate(() => {
         bullet.position.x += xspeed;
         bullet.position.z += zspeed;
-        if (airplane.isCollided(bullet)) bullet.destroy();
+        if (airplane.isCollided(bullet)) {
+          bullet.destroy();
+        }
       });
 
       this.parent.add(bullet);
@@ -216,9 +218,9 @@ class Boss extends Object3D {
       if (!game) {
         return reject('game not start');
       }
-      if (Math.abs(x) > game.xMax || Math.abs(z) > game.zMax) {
-        console.log('out of boundary');
-      }
+      // if (Math.abs(x) > game.xMax || Math.abs(z) > game.zMax) {
+      //   console.log('out of boundary');
+      // }
       const xshift = x - this.position.x;
       const zshift = z - this.position.z;
       if (xshift === 0 && zshift === 0) {

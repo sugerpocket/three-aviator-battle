@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --config=config/webpack.config.dev.ts",
-    "build": "webpack --config=config/webpack.config.prod.ts"
+    "build": "webpack --config=config/webpack.config.prod.ts",
+    "lint": "tslint --project tsconfig.json"
   },
   "dependencies": {
     "@types/cannon": "^0.1.3",

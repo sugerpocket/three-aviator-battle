@@ -32,7 +32,7 @@ const material = new MeshPhongMaterial({
 });
 
 // 获得顶点
-var length = geometry.vertices.length;
+const length = geometry.vertices.length;
 
 // 创建一个新的数组存储与每个顶点关联的值：
 const waves: Wave[] = [];
@@ -68,7 +68,6 @@ sea.position.y = -1400;
 loop(time => {
   // 获取顶点
   const { vertices } = geometry;
-  const { length } = vertices;
 
   for (let i = 0; i < length; i++){
     const v = vertices[i];

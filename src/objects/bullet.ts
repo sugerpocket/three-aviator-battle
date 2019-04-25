@@ -19,7 +19,7 @@ class BulletParticle extends Mesh {
   }
 
   public explode() {
-    let material = this.material as MeshPhongMaterial;
+    const material = this.material as MeshPhongMaterial;
     material.needsUpdate = true;
     const targetX = this.position.x + (-1 + Math.random() * 2) * 20;
     const targetZ = this.position.z + (-1 + Math.random() * 2) * 20;
@@ -27,7 +27,9 @@ class BulletParticle extends Mesh {
     TweenMax.to(this.rotation, speed, { x: Math.random() * 12, z: Math.random() * 12 });
     TweenMax.to(this.scale, speed, { x: .1, y: .1, z: .1 });
     TweenMax.to(this.position, speed, { x: targetX, z: targetZ, delay: Math.random() * .1, ease: Power2.easeOut, onComplete: () => {
-      if(this.parent) this.parent.remove(this);
+      if(this.parent) {
+        this.parent.remove(this);
+      }
       this.scale.set(1, 1, 1);
     }});
   }
@@ -47,7 +49,7 @@ export default class Bullet extends Mesh {
     super(
       new TetrahedronGeometry(8, 2),
       new MeshPhongMaterial({
-        color: color,
+        color,
         shininess: 0,
         specular: 0xffffff,
         flatShading: true,
@@ -92,10 +94,14 @@ export default class Bullet extends Mesh {
   }
 
   public drop() {
-    if (this.parent) this.parent.remove(this);
+    if (this.parent) {
+      this.parent.remove(this);
+    }
     this.destroyCallbacks.forEach(cb => cb());
     // 防止内存泄漏
-    if (this.loopFlag) cancelLoop(this.loopFlag);
+    if (this.loopFlag) {
+      cancelLoop(this.loopFlag);
+    }
   }
 
   public destroy() {
