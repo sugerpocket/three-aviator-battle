@@ -1,4 +1,4 @@
-import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry, Vector3, SphereGeometry, ShaderMaterial } from 'three';
+import { Object3D, Mesh, MeshPhongMaterial, BoxGeometry } from 'three';
 import Colors from '../colors';
 import { loop } from '../loop';
 import game from '../game';
@@ -132,6 +132,10 @@ class AirPlane extends Object3D {
   }
 
   private update = (time: number) => {
+    if (!game) {
+      return;
+    }
+
     let xshift = 0;
     let zshift = 0;
 

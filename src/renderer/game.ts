@@ -1,4 +1,4 @@
-import { Vector3, WebGLRenderer, Euler } from 'three';
+import { Vector3, WebGLRenderer } from 'three';
 import { camera, scene, moveCamera } from './envirenment/scene';
 import sea from './objects/sea';
 import airplane from './objects/airplane';
@@ -8,7 +8,7 @@ import { loop } from './loop';
 import boss from './objects/boss';
 
 class Game {
-  private container = document.getElementById('world') as HTMLDivElement;
+  private container = document.getElementById('app') as HTMLDivElement;
 
   public renderer = new WebGLRenderer({ 
     // 在 css 中设置背景色透明显示渐变色

@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, Fog, Vector3, Euler } from 'three';
+import { PerspectiveCamera, Scene, Fog, Vector3 } from 'three';
 import { hemisphereLight, shadowLight, ambientLight } from './light';
 import Colors from '../colors';
 import { loop, cancelLoop } from '../loop';
