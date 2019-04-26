@@ -1,9 +1,11 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-// import CleanWebpackPlugin from 'clean-webpack-plugin';
 
-import { publicPath, buildPath } from './paths';
+import { publicPath } from './paths';
+
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
+const OfflinePlugin = require('offline-plugin');
 
 const config: webpack.Configuration = {
   mode: 'development',
@@ -55,7 +57,9 @@ const config: webpack.Configuration = {
     new HtmlWebpackPlugin({
       template: path.join(publicPath, 'index.html')
     }),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new OfflinePlugin(),
+    new InterpolateHtmlPlugin({ 'PUBLIC_URL': '' })
   ],
   devServer: {
     hot: true,

@@ -1,11 +1,12 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-// import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import { publicPath, buildPath } from './paths';
+
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
+const OfflinePlugin = require('offline-plugin');
 
 const extractLess = new ExtractTextWebpackPlugin({
   filename: "[name].[hash].css"
@@ -48,12 +49,14 @@ const config: webpack.Configuration = {
     path: buildPath
   },
   plugins: [
-    // new CleanWebpackPlugin([buildPath]),
+    new CopyWebpackPlugin([{ from: 'public' }], { ignore: ['index.html'] }),
     new HtmlWebpackPlugin({
       template: path.join(publicPath, 'index.html')
     }),
     // new BundleAnalyzerPlugin(),
-    extractLess
+    extractLess,
+    new OfflinePlugin(),
+    new InterpolateHtmlPlugin({ 'PUBLIC_URL': '' })
   ]
 };
 
